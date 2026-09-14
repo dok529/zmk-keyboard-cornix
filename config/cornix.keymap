@@ -144,28 +144,57 @@
             bindings = <&kp ESC>, <&kp GRAVE>;
             mods = <(MOD_LGUI|MOD_RGUI|MOD_LSFT|MOD_RSFT)>;
         };
+
+        // macOS Colemak umlauts: tap for lowercase, tap with Shift held for
+        // the capital. mod-morph masks the real (explicit) Shift before
+        // invoking the morph branch, so the Option+<dead-key> step below
+        // fires unshifted; Shift for the capital is then reapplied only to
+        // the final letter as an *implicit* modifier via LS(), which the
+        // masking does not touch. See zmuml below for the actual sequence.
+        zmae: zm_ae {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&zmuml A>, <&zmuml LS(A)>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        zmoe: zm_oe {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&zmuml SEMI>, <&zmuml LS(SEMI)>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        zmue: zm_ue {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&zmuml I>, <&zmuml LS(I)>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
     };
 
     macros {
-        // ported from miryoku.vil macros M1-M4 (M0 dropped along with the tap-dances that used it)
-        zm1: zm1 {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_press &kp LALT>, <&macro_tap &kp I>, <&macro_release &kp LALT>, <&macro_tap &kp I>;
+        // Option+I is macOS's diaeresis dead key *as remapped by the
+        // Colemak input source* (HID I is where Colemak's "u" sits, and
+        // macOS's Option-layer follows the remapped letters). Tapping a
+        // vowel afterwards composes ae/oe/ue; the parameter carries which
+        // vowel keycode to tap (plain for lowercase, LS(x) for capital,
+        // via zmae/zmoe/zmue above).
+        zmuml: zmuml {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings
+                = <&macro_press &kp LALT>
+                , <&macro_tap &kp I>
+                , <&macro_release &kp LALT>
+                , <&macro_param_1to1>
+                , <&macro_tap &kp MACRO_PLACEHOLDER>
+                ;
         };
 
-        zm2: zm2 {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_press &kp LALT>, <&macro_tap &kp I>, <&macro_release &kp LALT>, <&macro_tap &kp SEMI>;
-        };
-
-        zm3: zm3 {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_press &kp LALT>, <&macro_tap &kp I>, <&macro_release &kp LALT>, <&macro_tap &kp A>;
-        };
-
+        // ported from miryoku.vil macro M4 (M0-M3 dropped: M0 was only used by
+        // now-dropped tap-dances; M1-M3 were the same Option+I umlaut pattern,
+        // replaced above by zmae/zmoe/zmue so Shift produces capitals too)
         zm4: zm4 {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -279,8 +308,8 @@
             display-name = "Mix";
 
             bindings = <
-&trans  &trans  &kp LG(RBKT)  &kp LG(LBKT)  &kp C_VOL_UP  &kp LC(LG(Q))  &trans  &trans  &zm1    &trans  &trans  &trans
-&trans  &zm3    &trans        &kp LA(D)     &kp C_VOL_DN  &kp LS(LG(M))  &trans  &trans  &trans  &trans  &zm2    &trans
+&trans  &trans  &kp LG(RBKT)  &kp LG(LBKT)  &kp C_VOL_UP  &kp LC(LG(Q))  &trans  &trans  &zmue   &trans  &trans  &trans
+&trans  &zmae   &trans        &kp LA(D)     &kp C_VOL_DN  &kp LS(LG(M))  &trans  &trans  &trans  &trans  &zmoe   &trans
 &trans  &kp F1  &kp F2  &kp F3  &kp F4  &kp F5  &kp C_MUTE  &none  &kp F6  &kp F7  &kp F8  &kp F9  &kp F10  &trans
 &trans  &trans  &trans  &trans  &trans  &kp ENTER        &trans  &trans  &trans  &trans  &trans  &trans
             >;
