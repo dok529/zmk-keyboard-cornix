@@ -233,10 +233,10 @@
             display-name = "Base";
 
             bindings = <
-&gresc     &kp Q         &kp W         &kp E          &kp R                &kp T          &kp BSPC   &kp SQT               &kp O          &kp I          &kp U                &kp Y
-&kp TAB    &hm_l LALT A  &hm_l LALT S  &hm_l LCTRL D  &hm_shift_l LSHFT F  &kp G          &kp ENTER  &kp SEMI              &hm_r RALT L   &hm_r RCTRL K  &hm_shift_r RSHFT J  &kp H
-&kp LSHFT  &kp Z         &kp X         &kp C          &kp V                &kp B  &zm4    &tog 1     &kp BSLH   &kp FSLH   &kp DOT        &kp COMMA      &kp M                &kp N
-&kp LCTRL  &kp LGUI      &kp LALT      &mo 2          &hm LCTRL SPACE      &hm LGUI TAB   &kp END    &kp LG(U)  &kp HOME   &lt 7 DELETE   &lt 3 BSPC     &lt 5 LSHFT
+&gresc     &kp Q         &kp W         &kp E          &kp R                &kp T          &kp Y      &kp U          &kp I          &kp O         &kp SQT               &kp BSPC
+&kp TAB    &hm_l LALT A  &hm_l LALT S  &hm_l LCTRL D  &hm_shift_l LSHFT F  &kp G          &kp H      &hm_shift_r RSHFT J  &hm_r RCTRL K  &hm_r RALT L  &kp SEMI              &kp ENTER
+&kp LSHFT  &kp Z         &kp X         &kp C          &kp V                &kp B  &zm4    &tog 1     &kp N      &kp M          &kp COMMA      &kp DOT       &kp FSLH              &kp BSLH
+&kp LCTRL  &kp LGUI      &kp LALT      &mo 2          &hm LCTRL SPACE      &hm LGUI TAB   &lt 5 LSHFT  &lt 3 BSPC  &lt 7 DELETE  &kp HOME      &kp LG(U)             &kp END
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp RIGHT LEFT>;
         };
@@ -245,10 +245,10 @@
             display-name = "Windows";
 
             bindings = <
-&trans     &trans        &trans    &trans        &trans           &trans        &trans         &trans         &trans        &trans  &trans  &trans
-&trans     &hm_l LGUI A  &trans    &trans        &trans           &trans        &trans         &trans         &trans        &trans  &trans  &trans
-&trans     &trans        &trans    &trans        &trans           &trans  &trans  &tog 0       &trans         &trans        &trans  &trans  &trans  &trans
-&kp LGUI   &kp LALT      &kp LCTRL &lt 4 LS(N6)  &hm LGUI SPACE   &hm LGUI TAB  &kp LG(RIGHT)  &kp LC(LG(Q))  &kp LG(LEFT)  &trans  &trans  &trans
+&trans     &trans        &trans    &trans        &trans           &trans        &trans  &trans  &trans        &trans         &trans         &trans
+&trans     &hm_l LGUI A  &trans    &trans        &trans           &trans        &trans  &trans  &trans        &trans         &trans         &trans
+&trans     &trans        &trans    &trans        &trans           &trans  &trans  &tog 0  &trans        &trans         &trans        &trans  &trans  &trans
+&kp LGUI   &kp LALT      &kp LCTRL &lt 4 LS(N6)  &hm LGUI SPACE   &hm LGUI TAB  &trans  &trans  &trans        &kp LG(LEFT)  &kp LC(LG(Q))  &kp LG(RIGHT)
             >;
         };
 
@@ -256,9 +256,9 @@
             display-name = "Media";
 
             bindings = <
-&trans  &kp C_AC_REFRESH  &kp C_AC_FORWARD  &kp C_AC_BACK  &kp C_VOL_UP  &kp LG(U)   &trans  &trans  &trans  &kp RA(O)  &trans  &trans
-&trans  &kp RA(Q)         &trans            &kp RA(D)      &kp C_VOL_DN  &zm4        &trans  &kp RA(P)  &trans  &trans  &trans  &kp F12
-&trans  &kp F1  &kp F2  &kp F3  &kp F4  &kp F5  &trans  &none  &kp F11  &kp F10  &kp F9  &kp F8  &kp F7  &kp F6
+&trans  &kp C_AC_REFRESH  &kp C_AC_FORWARD  &kp C_AC_BACK  &kp C_VOL_UP  &kp LG(U)   &trans  &trans  &kp RA(O)  &trans  &trans  &trans
+&trans  &kp RA(Q)         &trans            &kp RA(D)      &kp C_VOL_DN  &zm4        &kp F12  &trans  &trans  &trans  &kp RA(P)  &trans
+&trans  &kp F1  &kp F2  &kp F3  &kp F4  &kp F5  &trans  &none  &kp F6  &kp F7  &kp F8  &kp F9  &kp F10  &kp F11
 &trans  &trans  &trans  &trans  &trans  &kp ENTER        &trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
@@ -267,10 +267,10 @@
             display-name = "Adjust";
 
             bindings = <
-&bt BT_CLR    &bootloader  &none     &none     &none     &none   &none       &kp INS    &kp LC(X)  &kp LC(C)  &kp LC(V)  &kp CAPS
-&bt BT_SEL 0  &kp LGUI     &kp LALT  &kp LCTRL &kp LSHFT &none   &none       &kp RIGHT  &kp UP     &kp DOWN   &kp LEFT   &kp HOME
-&bt BT_SEL 1  &none  &none  &none  &none  &none  &kp C_MUTE  &mkp MB3  &none  &kp END  &kp PG_UP  &kp PG_DN  &kp HOME  &caps_word
-&bt BT_SEL 2  &bt BT_SEL 3  &bootloader  &trans  &trans  &trans   &none    &none      &none      &trans     &trans     &trans
+&bt BT_CLR    &bootloader  &none     &none     &none     &none   &kp CAPS    &kp LC(V)  &kp LC(C)  &kp LC(X)  &kp INS    &none
+&bt BT_SEL 0  &kp LGUI     &kp LALT  &kp LCTRL &kp LSHFT &none   &kp HOME    &kp LEFT   &kp DOWN   &kp UP     &kp RIGHT  &none
+&bt BT_SEL 1  &none  &none  &none  &none  &none  &kp C_MUTE  &mkp MB3  &caps_word  &kp HOME  &kp PG_DN  &kp PG_UP  &kp END  &none
+&bt BT_SEL 2  &bt BT_SEL 3  &bootloader  &trans  &trans  &trans   &trans   &trans     &trans     &none      &none      &none
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_DN PG_UP>;
         };
@@ -279,9 +279,9 @@
             display-name = "Mix";
 
             bindings = <
-&trans  &trans  &kp LG(RBKT)  &kp LG(LBKT)  &kp C_VOL_UP  &kp LC(LG(Q))  &trans  &trans  &trans  &zm1    &trans  &trans
-&trans  &zm3    &trans        &kp LA(D)     &kp C_VOL_DN  &kp LS(LG(M))  &trans  &zm2    &trans  &trans  &trans  &trans
-&trans  &kp F1  &kp F2  &kp F3  &kp F4  &kp F5  &kp C_MUTE  &none  &trans  &kp F10  &kp F9  &kp F8  &kp F7  &kp F6
+&trans  &trans  &kp LG(RBKT)  &kp LG(LBKT)  &kp C_VOL_UP  &kp LC(LG(Q))  &trans  &trans  &zm1    &trans  &trans  &trans
+&trans  &zm3    &trans        &kp LA(D)     &kp C_VOL_DN  &kp LS(LG(M))  &trans  &trans  &trans  &trans  &zm2    &trans
+&trans  &kp F1  &kp F2  &kp F3  &kp F4  &kp F5  &kp C_MUTE  &none  &kp F6  &kp F7  &kp F8  &kp F9  &kp F10  &trans
 &trans  &trans  &trans  &trans  &trans  &kp ENTER        &trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
@@ -290,8 +290,8 @@
             display-name = "Num";
 
             bindings = <
-&trans  &kp LBKT   &kp N7  &kp N8  &kp N9  &kp RBKT   &trans  &trans    &trans    &trans     &trans     &trans
-&trans  &kp P      &kp N4  &kp N5  &kp N6  &kp EQUAL  &trans  &kp RGUI  &kp RALT  &kp RCTRL  &kp RSHFT  &trans
+&trans  &kp LBKT   &kp N7  &kp N8  &kp N9  &kp RBKT   &trans  &trans     &trans     &trans     &trans    &trans
+&trans  &kp P      &kp N4  &kp N5  &kp N6  &kp EQUAL  &trans  &kp RSHFT  &kp RCTRL  &kp RALT   &kp RGUI  &trans
 &trans  &kp GRAVE  &kp N1  &kp N2  &kp N3  &kp BSLH  &kp C_MUTE  &mkp MB3  &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &kp DOT  &kp N0  &kp MINUS        &trans  &trans  &trans  &trans  &trans  &trans
             >;
@@ -302,10 +302,10 @@
             display-name = "Num2";
 
             bindings = <
-&trans  &trans    &trans    &trans     &trans     &trans   &trans  &kp RBKT  &kp N9  &kp N8  &kp N7  &kp LBKT
-&trans  &kp LGUI  &kp LALT  &kp LCTRL  &kp LSHFT  &trans   &trans  &kp N0    &kp N6  &kp N5  &kp N4  &kp EQUAL
-&trans  &trans  &trans  &trans  &trans  &trans  &kp C_MUTE  &mkp MB3  &trans  &kp MINUS  &kp N3  &kp N2  &kp N1  &kp P
-&trans  &trans  &trans  &trans  &tog 6  &trans        &trans  &trans  &trans  &trans  &kp DOT  &kp COMMA
+&trans  &trans    &trans    &trans     &trans     &trans   &kp LBKT  &kp N7  &kp N8  &kp N9  &kp RBKT   &trans
+&trans  &kp LGUI  &kp LALT  &kp LCTRL  &kp LSHFT  &trans   &kp EQUAL &kp N4  &kp N5  &kp N6  &kp N0     &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &kp C_MUTE  &mkp MB3  &kp P  &kp N1  &kp N2  &kp N3  &kp MINUS  &trans
+&trans  &trans  &trans  &trans  &tog 6  &trans        &kp COMMA  &kp DOT  &trans  &trans  &trans  &trans
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_DN PG_UP>;
         };
@@ -314,8 +314,8 @@
             display-name = "Sym";
 
             bindings = <
-&trans  &kp LS(LBKT)   &kp LS(N7)  &kp LS(N8)  &kp LS(N9)  &kp LS(RBKT)   &trans  &trans    &trans    &trans     &trans     &trans
-&trans  &kp LS(P)      &kp LS(N4)  &kp LS(N5)  &kp LS(N6)  &kp LS(EQUAL)  &trans  &kp RGUI  &kp RALT  &kp RCTRL  &kp RSHFT  &trans
+&trans  &kp LS(LBKT)   &kp LS(N7)  &kp LS(N8)  &kp LS(N9)  &kp LS(RBKT)   &trans  &trans     &trans     &trans     &trans    &trans
+&trans  &kp LS(P)      &kp LS(N4)  &kp LS(N5)  &kp LS(N6)  &kp LS(EQUAL)  &trans  &kp RSHFT  &kp RCTRL  &kp RALT   &kp RGUI  &trans
 &trans  &kp LS(GRAVE)  &kp LS(N1)  &kp LS(N2)  &kp LS(N3)  &kp LS(BSLH)  &kp C_MUTE  &mkp MB3  &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &kp LS(N9)  &kp LS(N0)  &kp LS(MINUS)        &trans  &trans  &trans  &trans  &trans  &trans
             >;
