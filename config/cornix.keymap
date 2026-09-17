@@ -216,21 +216,8 @@
     combos {
         compatible = "zmk,combos";
 
-        // ported 1:1 from miryoku.vil's combo table
-        cb_er {
-            bindings = <&kp ENTER>;
-            key-positions = <3 4>;
-            layers = <0 1>;
-        };
-
-        cb_ui {
-            bindings = <&kp ENTER>;
-            key-positions = <7 8>;
-            layers = <0 1>;
-        };
-
         cb_cv {
-            bindings = <&kp TAB>;
+            bindings = <&kp ENTER>;
             key-positions = <27 28>;
             layers = <0 1>;
         };
