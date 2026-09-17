@@ -236,18 +236,21 @@
             bindings = <&kp ENTER>;
             key-positions = <27 28>;
             layers = <0 1>;
+            timeout-ms = <75>;
         };
 
         cb_we {
             bindings = <&kp ESC>;
             key-positions = <2 3>;
             layers = <0 1>;
+            timeout-ms = <75>;
         };
 
         cb_mcomma {
             bindings = <&kp ENTER>;
             key-positions = <33 34>;
             layers = <0 1>;
+            timeout-ms = <75>;
         };
     };
 
