@@ -220,13 +220,13 @@ docs. Two build paths exist:
 - **Docker** (`make init`, `make build`, `make build ARTIFACT=<name>`, see
   [`../Makefile`](../Makefile) and `../scripts/docker-*.sh`) — no local
   Zephyr/west/Nix install needed, matches the official CI image
-  (`zmkfirmware/zmk-build-arm:stable`). **Gotcha**: `scripts/docker-init.sh`
-  only copies `config/` into the isolated west workspace *once*, at setup
-  time; `scripts/docker-build.sh` re-syncs `config/` at the start of every
-  build specifically so local edits aren't silently ignored (this was a
-  real bug once — a whole round of "the fix isn't showing up" turned out to
-  be building a stale pre-edit snapshot). If you ever touch these scripts,
-  keep that re-sync.
+  (`zmkfirmware/zmk-build-arm:stable`). `config/` is bind-mounted read-only
+  straight from the repo (`-v "$REPO_ROOT/config:/ws/config:ro"`) into every
+  container, so local keymap/config edits are always picked up — no sync
+  step, no risk of building a stale copy. (This used to be a `cp -R` done
+  once at init time, re-copied on every build as a workaround after a real
+  "the fix isn't showing up" bug; the mount replaced both scripts' copy
+  steps entirely once bind-mounting turned out to work fine here.)
 - **Nix** (`nix develop`, `just init`, `just build <target>`, see
   `../Justfile`/`../flake.nix`) — the original toolchain; note
   `Justfile`'s `config := absolute_path('config2')` currently points at a

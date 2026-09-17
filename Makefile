@@ -35,6 +35,7 @@ vis:
 shell:
 	docker run --rm -it \
 		-v "$(CURDIR):/repo" \
+		-v "$(CURDIR)/config:/ws/config:ro" \
 		-v "$(CURDIR)/.west-workspace:/ws" \
 		-w /ws \
 		zmkfirmware/zmk-build-arm:stable bash

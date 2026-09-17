@@ -24,13 +24,6 @@ if [ ! -d "$WS_DIR/.west" ]; then
     "$REPO_ROOT/scripts/docker-init.sh"
 fi
 
-# docker-init.sh only copies config/ into the workspace once, at setup time.
-# Re-sync it on every build so local keymap/config edits actually get built
-# (otherwise the workspace's stale copy from init silently wins).
-echo "==> Syncing $REPO_ROOT/config -> $WS_DIR/config"
-mkdir -p "$WS_DIR/config"
-cp -R "$REPO_ROOT/config/." "$WS_DIR/config/"
-
 mkdir -p "$OUT_DIR"
 
 fail=0
@@ -55,6 +48,7 @@ while IFS='|' read -r board shield snippet artifact; do
 
     if ! docker run --rm \
         -v "$REPO_ROOT:/repo" \
+        -v "$REPO_ROOT/config:/ws/config:ro" \
         -v "$WS_DIR:/ws" \
         -w /ws \
         "${docker_env_args[@]}" \
