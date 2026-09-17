@@ -213,6 +213,22 @@
         };
     };
 
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+
+        // Adjust (layer 3) is reached identically from Base (Windows) and
+        // win_layer (macOS mode), so it can't know which OS it's for. When
+        // win_layer + Adjust are both active, additionally activate
+        // mac_adjust_layer on top: it overrides only Home/End with the
+        // macOS-correct Cmd+Left/Right (raw Home/End scroll the viewport on
+        // macOS instead of moving the cursor) and is &trans everywhere else,
+        // falling through to Adjust's shared bindings.
+        mac_adjust {
+            if-layers = <1 3>;
+            then-layer = <8>;
+        };
+    };
+
     combos {
         compatible = "zmk,combos";
 
@@ -341,6 +357,21 @@
 &trans  &trans  &trans  &kp LS(N9)  &kp LS(N0)  &kp LS(MINUS)        &trans  &trans  &trans  &trans  &trans  &trans
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_DN PG_UP>;
+        };
+
+        mac_adjust_layer {
+            // Activated automatically (see conditional_layers above) on top
+            // of Adjust whenever win_layer (macOS mode) is also active.
+            // Only overrides Home/End; everything else is &trans and falls
+            // through to Adjust.
+            display-name = "AdjMac";
+
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &trans  &trans        &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &kp LG(LEFT)  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp LG(LEFT)  &trans  &trans  &kp LG(RIGHT)  &trans
+&trans  &trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans
+            >;
         };
     };
 };
