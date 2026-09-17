@@ -198,6 +198,20 @@ far-left column the existing BT_SEL pattern uses elsewhere) — **this is an
 unverified guess**, not a confirmed mapping; flag it if the original QMK
 `process_record_user()` source ever turns up.
 
+## Visualizing the keymap
+
+`make vis` (see [`../Makefile`](../Makefile)) regenerates
+`keymap-viz.html` at the repo root: a standalone, interactive,
+Vial-style view of the current keymap (one tab per layer, laid out
+like the real board, click a key for its full binding and an
+explanation). It's generated fresh from `config/cornix.keymap` and
+`boards/jzf/cornix/cornix-layouts.dtsi` by
+[`../scripts/gen_keymap_viz.py`](../scripts/gen_keymap_viz.py) (which
+fills in [`../scripts/keymap-viz-template.html`](../scripts/keymap-viz-template.html))
+— no Docker/Nix/network needed, just `python3`. Re-run it after editing
+the keymap; the output file itself is gitignored (regenerate, don't
+commit it).
+
 ## Local build chain
 
 See the top-level [`../README.md`](../README.md) for user-facing build/flash

@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cornix Keymap</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#f2f0ea; --surface:#ffffff; --key:#ece9e1; --key-border:#d7d2c6;
+    --ink:#26241f; --ink-dim:#736d5f; --ink-faint:#a49d8b;
+    --accent:#b5661f; --accent-ink:#ffffff;
+    --accent2:#5c7a6e;
+    --shadow: 0 1px 0 rgba(38,36,31,.06), 0 1px 2px rgba(38,36,31,.05);
+    --key-shadow: 0 1px 0 var(--key-border), 0 2px 3px rgba(38,36,31,.08);
+    --radius: 8px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171512; --surface:#201d19; --key:#2a2621; --key-border:#3c362e;
+      --ink:#ece7db; --ink-dim:#9c9484; --ink-faint:#645c4e;
+      --accent:#e2a25a; --accent-ink:#191410;
+      --accent2:#7fa393;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.35);
+      --key-shadow: 0 1px 0 rgba(0,0,0,.4), 0 2px 4px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#171512; --surface:#201d19; --key:#2a2621; --key-border:#3c362e;
+    --ink:#ece7db; --ink-dim:#9c9484; --ink-faint:#645c4e;
+    --accent:#e2a25a; --accent-ink:#191410;
+    --accent2:#7fa393;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.35);
+    --key-shadow: 0 1px 0 rgba(0,0,0,.4), 0 2px 4px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg); color:var(--ink); margin:0;
+    font-family:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:1180px; margin:0 auto; padding:28px 20px 64px; }
+
+  header.page{ margin-bottom:6px; }
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--accent2); font-weight:600; margin:0 0 6px;
+  }
+  h1{ font-family:"IBM Plex Mono",monospace; font-size:26px; font-weight:600; margin:0 0 4px; text-wrap:balance; }
+  .sub{ color:var(--ink-dim); font-size:14.5px; margin:0 0 22px; max-width:62ch; line-height:1.55; }
+  .sub code{ font-family:"IBM Plex Mono",monospace; font-size:.92em; background:var(--key); border:1px solid var(--key-border); border-radius:4px; padding:.05em .35em; }
+
+  nav.tabs{
+    display:flex; flex-wrap:wrap; gap:6px; margin-bottom:22px;
+    border-bottom:1px solid var(--key-border); padding-bottom:14px;
+  }
+  nav.tabs button{
+    font-family:"IBM Plex Mono",monospace; font-size:13px; font-weight:500;
+    padding:7px 14px; border-radius:999px; border:1px solid var(--key-border);
+    background:var(--surface); color:var(--ink-dim); cursor:pointer;
+    transition:background .12s, color .12s, border-color .12s;
+  }
+  nav.tabs button:hover{ color:var(--ink); border-color:var(--ink-faint); }
+  nav.tabs button.active{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  nav.tabs button:focus-visible, .keycap:focus-visible, .combo-row:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  .board-card{
+    background:var(--surface); border:1px solid var(--key-border); border-radius:14px;
+    box-shadow:var(--shadow); padding:26px 22px 22px; margin-bottom:20px;
+    overflow-x:auto;
+  }
+  .board-scale{ position:relative; margin:0 auto; }
+
+  .keycap{
+    position:absolute; display:flex; flex-direction:column; justify-content:center; align-items:center;
+    background:var(--key); border:1px solid var(--key-border); border-radius:7px;
+    box-shadow:var(--key-shadow); cursor:pointer; user-select:none;
+    transition:transform .08s ease, box-shadow .08s ease, border-color .08s ease;
+    padding:2px;
+  }
+  .keycap:hover{ transform:translateY(-1px); border-color:var(--accent); }
+  .keycap.selected{ border-color:var(--accent); box-shadow:var(--key-shadow), 0 0 0 2px var(--accent) inset; }
+  .keycap .main{ font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:14px; line-height:1.1; color:var(--ink); }
+  .keycap .sub{ font-family:"IBM Plex Mono",monospace; font-weight:500; font-size:8.5px; color:var(--accent2); margin-top:2px; letter-spacing:.01em; }
+  .keycap.trans .main, .keycap.none .main{ opacity:0; }
+  .keycap.trans{ background:transparent; box-shadow:none; }
+  .keycap.trans::after{ content:"·"; position:absolute; color:var(--ink-faint); font-size:18px; }
+  .keycap.none{ background:transparent; box-shadow:none; border-style:dashed; border-color:var(--key-border); }
+  .keycap.kind-lt .sub, .keycap.kind-mo .sub, .keycap.kind-tog .sub, .keycap.kind-to .sub{ color:var(--accent); }
+  .keycap.kind-macro{ border-color:var(--accent2); }
+  .keycap.kind-macro .main{ color:var(--accent2); }
+
+  .encoder{
+    position:absolute; width:46px; height:46px; border-radius:50%;
+    background:var(--surface); border:2px solid var(--ink-faint);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .encoder:hover{ border-color:var(--accent); }
+  .encoder svg{ width:20px; height:20px; }
+  .encoder-label{
+    position:absolute; font-family:"IBM Plex Mono",monospace; font-size:9px; color:var(--ink-dim);
+    text-align:center; width:120px; line-height:1.3;
+  }
+
+  .lower{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:760px){ .lower{ grid-template-columns:1fr; } }
+
+  .panel{
+    background:var(--surface); border:1px solid var(--key-border); border-radius:14px;
+    box-shadow:var(--shadow); padding:20px 22px;
+  }
+  .panel h2{ font-family:"IBM Plex Mono",monospace; font-size:13px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--ink-dim); margin:0 0 14px; font-weight:600; }
+
+  #detail .placeholder{ color:var(--ink-faint); font-size:13.5px; line-height:1.6; }
+  #detail .pos{ font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--accent2); margin-bottom:6px; }
+  #detail .label{ font-family:"IBM Plex Mono",monospace; font-size:22px; font-weight:600; margin-bottom:8px; }
+  #detail .binding{ font-family:"IBM Plex Mono",monospace; font-size:12.5px; background:var(--key); border:1px solid var(--key-border);
+    border-radius:6px; padding:8px 10px; color:var(--ink); word-break:break-word; margin-bottom:10px; }
+  #detail .explain{ font-size:13px; color:var(--ink-dim); line-height:1.6; }
+
+  .combo-row{
+    display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--key-border);
+    font-size:13.5px; cursor:default;
+  }
+  .combo-row:last-child{ border-bottom:none; }
+  .combo-keys{ display:flex; gap:4px; }
+  .combo-keys span{
+    font-family:"IBM Plex Mono",monospace; font-size:11px; background:var(--key); border:1px solid var(--key-border);
+    border-radius:5px; padding:3px 7px; color:var(--ink-dim);
+  }
+  .combo-arrow{ color:var(--ink-faint); }
+  .combo-result{ font-family:"IBM Plex Mono",monospace; font-weight:600; color:var(--accent2); }
+  .combo-layers{ margin-left:auto; font-size:11px; color:var(--ink-faint); font-family:"IBM Plex Mono",monospace; }
+
+  .legend{ margin-top:20px; display:flex; flex-wrap:wrap; gap:16px 28px; font-size:12.5px; color:var(--ink-dim); }
+  .legend div{ display:flex; align-items:center; gap:7px; }
+  .legend .swatch{ width:15px; height:15px; border-radius:4px; background:var(--key); border:1px solid var(--key-border); flex:none; }
+  .legend .swatch.hold{ box-shadow:inset 0 0 0 2px var(--accent); }
+  .legend .swatch.macro{ border-color:var(--accent2); }
+  .legend code{ font-family:"IBM Plex Mono",monospace; }
+
+  footer.note{ margin-top:26px; font-size:12px; color:var(--ink-faint); line-height:1.7; }
+  footer.note a{ color:var(--ink-dim); }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="page">
+    <p class="eyebrow">ZMK &middot; boards/jzf/cornix</p>
+    <h1>Cornix Keymap</h1>
+    <p class="sub">Live view of <code>config/cornix.keymap</code> &mdash; 50 keys, 2 rotary encoders, 8 layers. Click a key for its full ZMK binding; hover a combo to see which keys trigger it.</p>
+  </header>
+
+  <nav class="tabs" id="tabs"></nav>
+
+  <div class="board-card">
+    <div class="board-scale" id="board"></div>
+  </div>
+
+  <div class="lower">
+    <div class="panel" id="detail-panel">
+      <h2>Key detail</h2>
+      <div id="detail"><p class="placeholder">Click any key on the board to see its position number, exact ZMK binding, and what it does.</p></div>
+    </div>
+    <div class="panel">
+      <h2>Combos <span style="font-weight:400;color:var(--ink-faint);">(active on Base + Win)</span></h2>
+      <div id="combos"></div>
+    </div>
+  </div>
+
+  <div class="panel legend">
+    <div><span class="swatch"></span> tap</div>
+    <div><span class="swatch hold"></span> hold&#8209;tap &mdash; small label = hold action</div>
+    <div><span class="swatch macro"></span> macro / mod&#8209;morph</div>
+    <div><code>▽Name</code> small label = momentary/tap to layer</div>
+    <div><code>·</code> = transparent (falls through to Base)</div>
+    <div>dashed = unused</div>
+    <div><code>⌘</code>Cmd &nbsp;<code>⌥</code>Opt &nbsp;<code>⌃</code>Ctrl &nbsp;<code>⇧</code>Shift</div>
+  </div>
+
+  <footer class="note">Generated from the current <code>config/cornix.keymap</code> source &mdash; not live-synced; re-publish after keymap edits to refresh this view.</footer>
+</div>
+
+<script id="viz-data" type="application/json">__DATA__</script>
+<script>
+(function(){
+  const DATA = JSON.parse(document.getElementById('viz-data').textContent);
+  const SCALE = 0.58;
+  const OFFSET_X = 40, OFFSET_Y = 40;
+  const KEYW = 100 * SCALE;
+
+  const LAYER_META = {
+    default_layer: {short:'Base'}, win_layer:{short:'Win'}, media_layer:{short:'Media'},
+    adjust_layer:{short:'Adj'}, mix_layer:{short:'Mix'}, num_layer:{short:'Num'},
+    num2_layer:{short:'Num2'}, sym_layer:{short:'Sym'}, mac_adjust_layer:{short:'AdjMac'}
+  };
+
+  const EXPLAIN = {
+    trans:'Transparent: falls through to whatever the layer below (usually Base) has at this position.',
+    none:'No binding on this layer.',
+    kp:'Sends a plain keycode.',
+    ht:'Hold-tap: tap for the big label, hold for the small one (positional homerow mod &mdash; resolves fast based on which hand types next).',
+    lt:'Layer-tap: tap for the big label, hold to momentarily switch to the layer named below.',
+    mo:'Momentary layer: held down, switches to that layer; released, returns to Base.',
+    tog:'Toggle layer: press once to switch layers persistently, press the matching key on that layer to switch back.',
+    to:'Switches directly to that layer (not momentary).',
+    bt:'Bluetooth profile control.',
+    sys:'System behavior.',
+    morph:'Mod-morph: tap alone for the big label, tap while holding Shift/Gui for the small one.',
+    macro:'Macro: runs a fixed key sequence. See board.',
+    mouse:'Mouse button click.',
+    '?':'Custom / uncommon binding.'
+  };
+  const MACRO_EXPLAIN = {
+    '&zmae':'Types "ä"; hold Shift while tapping for "Ä". Sends macOS Option+"u" diaeresis dead-key (at the Colemak position for "u", i.e. physical I) then the vowel.',
+    '&zmoe':'Types "ö"; hold Shift while tapping for "Ö". Same Option+dead-key mechanism as ä/ü.',
+    '&zmue':'Types "ü"; hold Shift while tapping for "Ü". Same Option+dead-key mechanism as ä/ö.',
+    '&zm4':'Macro: press Cmd+Option, tap N, release Cmd+Option.',
+    '&gresc':'Tap for Escape. Tap while holding Shift or Cmd/Win for a backtick/tilde.'
+  };
+
+  // compute board bounding box from all coords for centering
+  let maxX = 0, maxY = 0;
+  DATA.coords.forEach(([x,y]) => { maxX = Math.max(maxX, x); maxY = Math.max(maxY, y); });
+  const boardW = (maxX + 100) * SCALE + OFFSET_X * 2;
+  const boardH = (maxY + 100) * SCALE + OFFSET_Y * 2 + 70; // extra room for encoders above
+
+  const tabsEl = document.getElementById('tabs');
+  const boardEl = document.getElementById('board');
+  boardEl.style.width = boardW + 'px';
+  boardEl.style.height = boardH + 'px';
+
+  DATA.layers.forEach((layer, i) => {
+    const b = document.createElement('button');
+    b.textContent = (LAYER_META[layer.name] || {short:layer.display}).short;
+    b.title = layer.display;
+    b.addEventListener('click', () => selectLayer(i));
+    b.dataset.idx = i;
+    tabsEl.appendChild(b);
+  });
+
+  function keyClass(cell){
+    let c = 'keycap kind-' + cell.kind;
+    if (cell.kind === 'trans') c += ' trans';
+    if (cell.kind === 'none') c += ' none';
+    return c;
+  }
+
+  let currentLayer = 0;
+  let selectedPos = null;
+
+  function render(){
+    boardEl.innerHTML = '';
+    const layer = DATA.layers[currentLayer];
+
+    DATA.coords.forEach(([x, y, rot], pos) => {
+      const cell = layer.cells[pos];
+      const div = document.createElement('div');
+      div.className = keyClass(cell);
+      if (pos === selectedPos) div.className += ' selected';
+      div.style.left = (OFFSET_X + x * SCALE) + 'px';
+      div.style.top = (OFFSET_Y + 70 + y * SCALE) + 'px';
+      div.style.width = KEYW + 'px';
+      div.style.height = KEYW + 'px';
+      if (rot) {
+        // rotation origin from the dts key_physical_attrs rx/ry, expressed
+        // relative to this key's own top-left corner
+        div.style.transformOrigin = '50% 50%';
+        div.style.transform = 'rotate(' + (rot/100) + 'deg)';
+      }
+      div.tabIndex = 0;
+      div.setAttribute('role','button');
+      div.setAttribute('aria-label', (cell.main||'blank') + ' key');
+      if (cell.main) {
+        const m = document.createElement('div'); m.className='main'; m.textContent = cell.main; div.appendChild(m);
+      }
+      if (cell.sub) {
+        const s = document.createElement('div'); s.className='sub'; s.textContent = cell.sub; div.appendChild(s);
+      }
+      div.addEventListener('click', () => showDetail(pos, cell));
+      div.addEventListener('keydown', (e) => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); showDetail(pos, cell); } });
+      boardEl.appendChild(div);
+    });
+
+    // encoders: heuristic placement above the inner-top of each half
+    if (layer.sensor) {
+      addEncoder(560, -6, layer.sensor[0], 'Left encoder');
+      addEncoder(790, -6, layer.sensor[1], 'Right encoder');
+    }
+
+    [...tabsEl.children].forEach((b,i) => b.classList.toggle('active', i===currentLayer));
+  }
+
+  function addEncoder(x, y, sensor, label){
+    if (!sensor) return;
+    const e = document.createElement('div');
+    e.className = 'encoder';
+    e.style.left = (OFFSET_X + x*SCALE - 23) + 'px';
+    e.style.top = (OFFSET_Y + 70 + y*SCALE - 23) + 'px';
+    e.title = label + ': turn CW = ' + sensor.cw + ', CCW = ' + sensor.ccw;
+    e.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>';
+    boardEl.appendChild(e);
+
+    const l = document.createElement('div');
+    l.className = 'encoder-label';
+    l.style.left = (OFFSET_X + x*SCALE - 60) + 'px';
+    l.style.top = (OFFSET_Y + 70 + y*SCALE - 46) + 'px';
+    l.innerHTML = '&#8634;' + sensor.ccw + '&nbsp;&nbsp;' + sensor.cw + '&#8635;';
+    boardEl.appendChild(l);
+  }
+
+  function showDetail(pos, cell){
+    selectedPos = pos;
+    render();
+    const el = document.getElementById('detail');
+    const explainKind = EXPLAIN[cell.kind] || '';
+    const macroNote = MACRO_EXPLAIN[cell.full.split(/\s+/)[0]] || '';
+    el.innerHTML =
+      '<div class="pos">position ' + pos + '</div>' +
+      '<div class="label">' + (cell.main || (cell.kind==='none' ? '(unused)' : '(none)')) + (cell.sub ? ' <span style="color:var(--ink-faint);font-size:14px;">/ ' + cell.sub + '</span>' : '') + '</div>' +
+      '<div class="binding">' + escapeHtml(cell.full) + '</div>' +
+      '<div class="explain">' + (macroNote || explainKind) + '</div>';
+  }
+
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function selectLayer(i){ currentLayer = i; selectedPos = null; render(); document.getElementById('detail').innerHTML = '<p class="placeholder">Click any key on the board to see its position number, exact ZMK binding, and what it does.</p>'; }
+
+  // combos
+  const combosEl = document.getElementById('combos');
+  const posLabel = (p) => {
+    for (const l of DATA.layers) {
+      if (l.name !== 'default_layer') continue;
+      const c = l.cells[p];
+      return c.main || ('#'+p);
+    }
+    return '#'+p;
+  };
+  DATA.combos.forEach(c => {
+    const row = document.createElement('div');
+    row.className = 'combo-row';
+    row.innerHTML =
+      '<span class="combo-keys">' + c.positions.map(p => '<span>'+escapeHtml(posLabel(p))+'</span>').join('') + '</span>' +
+      '<span class="combo-arrow">&rarr;</span>' +
+      '<span class="combo-result">' + escapeHtml(c.label) + '</span>' +
+      '<span class="combo-layers">' + c.layers.map(l => (LAYER_META[Object.keys(LAYER_META)[l]]||{}).short || l).join('+') + '</span>';
+    combosEl.appendChild(row);
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>

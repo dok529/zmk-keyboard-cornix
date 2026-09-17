@@ -10,13 +10,14 @@
 #   make build          build every target listed in build.yaml
 #   make build ARTIFACT=cornix_left_default_nosd   build a single target
 #   make targets        list the targets build.yaml defines
+#   make vis             regenerate the interactive keymap visualization
 #   make shell           interactive shell in the build container
 #   make clean            remove build output (keeps west workspace cache)
 #   make clean-all         also remove the west workspace (forces re-clone)
 #
 # Output UF2/bin files land in ./firmware/<artifact-name>.uf2
 
-.PHONY: init build targets shell clean clean-all
+.PHONY: init build targets vis shell clean clean-all
 
 init:
 	./scripts/docker-init.sh
@@ -26,6 +27,10 @@ build:
 
 targets:
 	python3 scripts/build_targets.py
+
+vis:
+	python3 scripts/gen_keymap_viz.py
+	@echo "open keymap-viz.html in a browser to view it"
 
 shell:
 	docker run --rm -it \

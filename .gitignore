@@ -9,3 +9,4 @@ target
 firmware
 .west-workspace
 .DS_Store
+keymap-viz.html
