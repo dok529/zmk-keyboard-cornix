@@ -273,6 +273,13 @@
             timeout-ms = <75>;
         };
 
+        cb_pg {
+            bindings = <&kp ENTER>;
+            key-positions = <4 5>;
+            layers = <0 1>;
+            timeout-ms = <75>;
+        };
+
         cb_mcomma {
             bindings = <&kp ENTER>;
             key-positions = <33 34>;

@@ -108,10 +108,12 @@ listed in its `if-layers` (see the layer-index table below for what's free).
 ## Combos
 
 Defined in `combos { }`, addressed by raw position number (not affected by
-the ordering gotcha above): `cb_we` (2+3 → Esc) and `cb_mcomma` (33+34 →
-Enter), both active on layers `<0 1>` (Base + win_layer) only, with
-`timeout-ms = <75>`. `cb_mcomma` is currently the **only** way to type
-Enter — there is no direct Enter key on any layer. To find a position number for a new combo, check the layer's
+the ordering gotcha above): `cb_we` (2+3 → Esc), `cb_pg` (4+5 → Enter;
+Colemak P+G, i.e. HID R+T) and `cb_mcomma` (33+34 → Enter), all active on
+layers `<0 1>` (Base + win_layer) only, with `timeout-ms = <75>`. The two
+Enter combos are currently the **only** way to type Enter — there is no
+direct Enter key on any layer. Note the user refers to keys by their
+Colemak letters, not the HID keycode names used in the keymap. To find a position number for a new combo, check the layer's
 `bindings` array and count tokens left-to-right starting at 0 per the
 position-ordering rules above, or cross-reference
 `config/includes/cornix54.h`.
