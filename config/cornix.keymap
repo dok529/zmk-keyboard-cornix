@@ -149,6 +149,23 @@
             require-prior-idle-ms = <HM_PRIOR_IDLE>;
         };
 
+        // Thumb Shift (tap = Tab). Sits right next to Space on the same
+        // thumb, so it's pressed shortly after Space when capitalizing:
+        // with a require-prior-idle-ms that would be forced to a tap and
+        // insert a Tab instead, so none is set here. hold-preferred makes
+        // Shift win as soon as the next key goes down, regardless of which
+        // key is released first (the release-order rule that makes
+        // balanced home-row Shift misfire on fast rolls).
+        thumb_shift: thumb_shift {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            bindings = <&kp>, <&kp>;
+
+            flavor = "hold-preferred";
+            tapping-term-ms = <HM_TAPPING_TERM>;
+            quick-tap-ms = <175>;
+        };
+
         lt: layer_tap {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
@@ -291,9 +308,9 @@
 
             bindings = <
 &gresc     &kp Q         &kp W         &kp E          &kp R                &kp T          &kp Y      &kp U          &kp I          &kp O         &kp SQT               &kp BSPC
-&kp TAB    &hm_l LALT A  &hm_l LALT S  &hm_l LCTRL D  &hm_shift_l LSHFT F  &kp G          &kp H      &hm_shift_r RSHFT J  &hm_r RCTRL K  &hm_r RALT L  &kp SEMI              &none
+&kp TAB    &hm_l LALT A  &hm_l LGUI S  &hm_l LCTRL D  &hm_shift_l LSHFT F  &kp G          &kp H      &hm_shift_r RSHFT J  &hm_r RCTRL K  &hm_r RALT L  &hm_r LGUI SEMI       &none
 &kp LSHFT  &kp Z         &kp X         &kp C          &kp V                &kp B  &zm4    &tog 1     &kp N      &kp M          &kp COMMA      &kp DOT       &kp FSLH              &kp BSLH
-&kp LCTRL  &kp LGUI      &kp LALT      &mo 2          &hm LCTRL SPACE      &hm LGUI TAB   &lt 5 LSHFT  &lt 3 BSPC  &lt 7 DELETE  &kp HOME      &kp LG(U)             &kp END
+&kp LCTRL  &kp LGUI      &kp LALT      &mo 2          &hm LCTRL SPACE      &thumb_shift LSHFT TAB  &lt 5 LSHFT  &lt 3 BSPC  &lt 7 DELETE  &kp HOME      &kp LG(U)             &kp END
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp RIGHT LEFT>;
         };
@@ -303,9 +320,9 @@
 
             bindings = <
 &trans     &trans        &trans    &trans        &trans           &trans        &trans  &trans  &trans        &trans         &trans         &trans
-&trans     &hm_l LGUI A  &trans    &trans        &trans           &trans        &trans  &trans  &trans        &trans         &trans         &trans
+&trans     &hm_l LGUI A  &hm_l LALT S  &trans    &trans           &trans        &trans  &trans  &trans        &trans         &trans         &trans
 &trans     &trans        &trans    &trans        &trans           &trans  &trans  &tog 0  &trans        &trans         &trans        &trans  &trans  &trans
-&kp LGUI   &kp LALT      &kp LCTRL &lt 4 LS(N6)  &hm LGUI SPACE   &hm LGUI TAB  &trans  &trans  &trans        &kp LG(LEFT)  &kp LC(LG(Q))  &kp LG(RIGHT)
+&kp LGUI   &kp LALT      &kp LCTRL &lt 4 LS(N6)  &hm LGUI SPACE   &thumb_shift LSHFT TAB  &trans  &trans  &trans        &kp LG(LEFT)  &kp LC(LG(Q))  &kp LG(RIGHT)
             >;
         };
 

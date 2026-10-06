@@ -93,7 +93,7 @@ def label_for(token):
     m = re.match(r'^&kp (.+)$', t)
     if m:
         return dict(main=full_key(m.group(1)), sub='', full=t, kind='kp')
-    m = re.match(r'^&(hm_l|hm_r|hm_shift_l|hm_shift_r|hm) (\S+) (\S+)$', t)
+    m = re.match(r'^&(hm_l|hm_r|hm_shift_l|hm_shift_r|hm|thumb_shift) (\S+) (\S+)$', t)
     if m:
         _, mod, key = m.groups()
         return dict(main=key_label(key), sub=key_label(mod), full=t, kind='ht')

@@ -123,6 +123,13 @@ position-ordering rules above, or cross-reference
   hold). `hm_shift_l` / `hm_shift_r` are the same for Shift specifically.
 - `hm` — same idea but non-positional (no `hold-trigger-key-positions`),
   used for thumb keys like `&hm LCTRL SPACE`.
+- `thumb_shift` — thumb Shift (position 43, tap = Tab), `hold-preferred`
+  and deliberately *without* `require-prior-idle-ms`: it's pressed right
+  after Space on the same thumb when capitalizing, so a prior-idle window
+  would turn those presses into Tabs. This is the primary Shift for
+  capitalizing German nouns; the home-row Shifts (T/N on Colemak) are
+  unreliable for that because `balanced` resolves a fast roll (Shift
+  released before the letter) as a tap.
 - `lt` — thin wrapper matching ZMK's built-in `&lt` (layer-tap), kept as a
   local alias so `tapping-term-ms`/`quick-tap-ms` are explicit here rather
   than inherited from upstream defaults.
