@@ -227,6 +227,14 @@ fills in [`../scripts/keymap-viz-template.html`](../scripts/keymap-viz-template.
 the keymap; the output file itself is gitignored (regenerate, don't
 commit it).
 
+The same page is published on GitHub Pages at
+<https://dok529.github.io/zmk-keyboard-cornix/keymap/>:
+[`../.github/workflows/pages.yml`](../.github/workflows/pages.yml) runs
+the generator into `docs/keymap/index.html` on every push to `main` that
+touches the keymap, the layout dtsi or the viz scripts (the rest of
+`docs/` is the upstream Cornix docs site). Requires Settings → Pages →
+Source = "GitHub Actions" on the repo.
+
 ## Local build chain
 
 See the top-level [`../README.md`](../README.md) for user-facing build/flash

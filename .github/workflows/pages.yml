@@ -8,6 +8,10 @@ on:
       - ".github/workflows/pages.yml"
       - "docs/**"
       - "scripts/check-pages.py"
+      - "config/cornix.keymap"
+      - "boards/jzf/cornix/cornix-layouts.dtsi"
+      - "scripts/gen_keymap_viz.py"
+      - "scripts/keymap-viz-template.html"
   workflow_dispatch:
 
 concurrency:
@@ -38,6 +42,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Generate keymap visualization
+        # Built fresh on every deploy (not committed) so the published
+        # page always matches config/cornix.keymap on main.
+        run: |
+          mkdir -p docs/keymap
+          python3 scripts/gen_keymap_viz.py docs/keymap/index.html
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact
