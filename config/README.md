@@ -266,7 +266,12 @@ docs. Two build paths exist:
   index.
 - `USER00`/`USER01`/`USER02`/`USER05`/`USER06` → BT_SEL mapping is an
   unverified guess (see above).
-- Mic-mute on macOS (distinct from system mute, which is unaffected) has no
-  firmware-side solution yet — it's app-specific (Zoom/Teams/Meet each have
-  their own shortcut) or needs a macOS-side Shortcuts/Hammerspoon automation
-  bound to a spare key combo; nothing implemented here yet.
+- Mic-mute on macOS (distinct from system mute, which is unaffected): macOS
+  has no HID usage for it, so there is no system-wide firmware-side
+  solution. Current compromise: the left encoder press (position 30) sends
+  `&zm4` (Win+Alt+N, the user's Windows mic-mute hotkey) on Base, but on
+  `win_layer` it sends Teams' own mute shortcut `LG(LS(M))` (Cmd+Shift+M)
+  — only works while a Teams window is focused, does nothing for
+  Zoom/Meet. A system-wide option would need a macOS-side tool (MuteKey,
+  Mic Drop, Hammerspoon, Raycast, …) bound to a spare key such as F19;
+  the user decided against that for now.

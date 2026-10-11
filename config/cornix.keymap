@@ -325,7 +325,7 @@
             bindings = <
 &trans     &trans        &trans    &trans        &trans           &trans        &trans  &trans  &trans        &trans         &trans         &trans
 &trans     &hm_l LGUI A  &hm_l LALT S  &trans    &trans           &trans        &trans  &trans  &trans        &trans         &trans         &trans
-&trans     &trans        &trans    &trans        &trans           &trans  &trans  &tog 0  &trans        &trans         &trans        &trans  &trans  &trans
+&trans     &trans        &trans    &trans        &trans           &trans  &kp LG(LS(M))  &tog 0  &trans        &trans         &trans        &trans  &trans  &trans
 &kp LGUI   &kp LALT      &kp LCTRL &lt 4 LS(N6)  &thumb_shift LSHFT SPACE  &hm LGUI TAB  &trans  &trans  &trans        &kp LG(LEFT)  &kp LC(LG(Q))  &kp LG(RIGHT)
             >;
         };
