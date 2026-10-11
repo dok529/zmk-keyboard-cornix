@@ -175,8 +175,9 @@ def extract_coords(text):
     for e in entries:
         parts = [p.strip('()') for p in e.split()]
         w, h, x, y = map(int, parts[:4])
-        rot = int(parts[4]) if len(parts) > 4 else 0
-        coords.append((x, y, rot))
+        # rotation (centi-degrees) is around (rx, ry), not the key center
+        rot, rx, ry = (map(int, parts[4:7]) if len(parts) > 6 else (0, 0, 0))
+        coords.append((x, y, rot, rx, ry))
     return coords
 
 

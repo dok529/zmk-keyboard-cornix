@@ -223,10 +223,19 @@
   };
 
   // compute board bounding box from all coords for centering
+  // (uses the rotated corners, since a key's x/y can lie far from where it
+  // is drawn when its rotation origin is distant)
   let maxX = 0, maxY = 0;
-  DATA.coords.forEach(([x,y]) => { maxX = Math.max(maxX, x); maxY = Math.max(maxY, y); });
-  const boardW = (maxX + 100) * SCALE + OFFSET_X * 2;
-  const boardH = (maxY + 100) * SCALE + OFFSET_Y * 2 + 70; // extra room for encoders above
+  DATA.coords.forEach(([x, y, rot, rx, ry]) => {
+    const a = (rot || 0) / 100 * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
+    [[x, y], [x + 100, y], [x, y + 100], [x + 100, y + 100]].forEach(([px, py]) => {
+      const dx = px - rx, dy = py - ry;
+      maxX = Math.max(maxX, rot ? rx + dx * c - dy * s : px);
+      maxY = Math.max(maxY, rot ? ry + dx * s + dy * c : py);
+    });
+  });
+  const boardW = maxX * SCALE + OFFSET_X * 2;
+  const boardH = maxY * SCALE + OFFSET_Y * 2 + 70; // extra room for encoders above
 
   const tabsEl = document.getElementById('tabs');
   const boardEl = document.getElementById('board');
@@ -256,7 +265,7 @@
     boardEl.innerHTML = '';
     const layer = DATA.layers[currentLayer];
 
-    DATA.coords.forEach(([x, y, rot], pos) => {
+    DATA.coords.forEach(([x, y, rot, rx, ry], pos) => {
       const cell = layer.cells[pos];
       const div = document.createElement('div');
       div.className = keyClass(cell);
@@ -268,7 +277,7 @@
       if (rot) {
         // rotation origin from the dts key_physical_attrs rx/ry, expressed
         // relative to this key's own top-left corner
-        div.style.transformOrigin = '50% 50%';
+        div.style.transformOrigin = ((rx - x) * SCALE) + 'px ' + ((ry - y) * SCALE) + 'px';
         div.style.transform = 'rotate(' + (rot/100) + 'deg)';
       }
       div.tabIndex = 0;
