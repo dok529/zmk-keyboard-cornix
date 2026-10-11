@@ -6,6 +6,9 @@ ZMK board definitions and shields for the Cornix split ergonomic keyboard.
 [简体中文 README](./README_zh.md) ·
 [日本語 README (AI-generated)](./README_jp.md)
 
+**My keymap:** [interactive visualization](https://dok529.github.io/zmk-keyboard-cornix/keymap/)
+(generated from [`config/cornix.keymap`](config/cornix.keymap), updated on every push)
+
 **Current board release:** [`v3.0.0`](https://github.com/hitsmaxft/zmk-keyboard-cornix/releases/tag/v3.0.0)
 
 **ZMK baseline:** `main` with Zephyr 4.1
