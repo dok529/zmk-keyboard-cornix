@@ -151,7 +151,7 @@
   <header class="page">
     <p class="eyebrow">ZMK &middot; boards/jzf/cornix</p>
     <h1>Cornix Keymap</h1>
-    <p class="sub">Live view of <code>config/cornix.keymap</code> &mdash; 50 keys, 2 rotary encoders, 8 layers. Click a key for its full ZMK binding; hover a combo to see which keys trigger it.</p>
+    <p class="sub">Live view of <code>config/cornix.keymap</code> &mdash; <span id="counts">50 keys, 2 rotary encoders</span>. Click a key for its full ZMK binding; hover a combo to see which keys trigger it.</p>
   </header>
 
   <nav class="tabs" id="tabs"></nav>
@@ -166,7 +166,7 @@
       <div id="detail"><p class="placeholder">Click any key on the board to see its position number, exact ZMK binding, and what it does.</p></div>
     </div>
     <div class="panel">
-      <h2>Combos <span style="font-weight:400;color:var(--ink-faint);">(active on Base + Win)</span></h2>
+      <h2>Combos</h2>
       <div id="combos"></div>
     </div>
   </div>
@@ -176,7 +176,7 @@
     <div><span class="swatch hold"></span> hold&#8209;tap &mdash; small label = hold action</div>
     <div><span class="swatch macro"></span> macro / mod&#8209;morph</div>
     <div><code>▽Name</code> small label = momentary/tap to layer</div>
-    <div><code>·</code> = transparent (falls through to Base)</div>
+    <div><code>·</code> = transparent (falls through to the layer below)</div>
     <div>dashed = unused</div>
     <div><code>⌘</code>Cmd &nbsp;<code>⌥</code>Opt &nbsp;<code>⌃</code>Ctrl &nbsp;<code>⇧</code>Shift</div>
   </div>
@@ -192,19 +192,13 @@
   const OFFSET_X = 40, OFFSET_Y = 40;
   const KEYW = 100 * SCALE;
 
-  const LAYER_META = {
-    default_layer: {short:'Base'}, win_layer:{short:'Win'}, media_layer:{short:'Media'},
-    adjust_layer:{short:'Adj'}, mix_layer:{short:'Mix'}, num_layer:{short:'Num'},
-    num2_layer:{short:'Num2'}, sym_layer:{short:'Sym'}, mac_adjust_layer:{short:'AdjMac'}
-  };
-
   const EXPLAIN = {
-    trans:'Transparent: falls through to whatever the layer below (usually Base) has at this position.',
+    trans:'Transparent: falls through to whatever the layer below (usually layer 0) has at this position.',
     none:'No binding on this layer.',
     kp:'Sends a plain keycode.',
     ht:'Hold-tap: tap for the big label, hold for the small one (positional homerow mod &mdash; resolves fast based on which hand types next).',
     lt:'Layer-tap: tap for the big label, hold to momentarily switch to the layer named below.',
-    mo:'Momentary layer: held down, switches to that layer; released, returns to Base.',
+    mo:'Momentary layer: held down, switches to that layer; released, returns to the previous layer.',
     tog:'Toggle layer: press once to switch layers persistently, press the matching key on that layer to switch back.',
     to:'Switches directly to that layer (not momentary).',
     bt:'Bluetooth profile control.',
@@ -237,6 +231,9 @@
   const boardW = maxX * SCALE + OFFSET_X * 2;
   const boardH = maxY * SCALE + OFFSET_Y * 2 + 70; // extra room for encoders above
 
+  document.getElementById('counts').textContent =
+    DATA.coords.length + ' keys, 2 rotary encoders, ' + DATA.layers.length + ' layers';
+
   const tabsEl = document.getElementById('tabs');
   const boardEl = document.getElementById('board');
   boardEl.style.width = boardW + 'px';
@@ -244,8 +241,8 @@
 
   DATA.layers.forEach((layer, i) => {
     const b = document.createElement('button');
-    b.textContent = (LAYER_META[layer.name] || {short:layer.display}).short;
-    b.title = layer.display;
+    b.textContent = layer.display;
+    b.title = layer.name;
     b.addEventListener('click', () => selectLayer(i));
     b.dataset.idx = i;
     tabsEl.appendChild(b);
@@ -357,7 +354,7 @@
       '<span class="combo-keys">' + c.positions.map(p => '<span>'+escapeHtml(posLabel(p))+'</span>').join('') + '</span>' +
       '<span class="combo-arrow">&rarr;</span>' +
       '<span class="combo-result">' + escapeHtml(c.label) + '</span>' +
-      '<span class="combo-layers">' + c.layers.map(l => (LAYER_META[Object.keys(LAYER_META)[l]]||{}).short || l).join('+') + '</span>';
+      '<span class="combo-layers">' + c.layers.map(l => (DATA.layers[l] || {}).display || l).join('+') + '</span>';
     combosEl.appendChild(row);
   });
 

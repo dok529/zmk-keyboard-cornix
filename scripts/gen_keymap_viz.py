@@ -48,8 +48,9 @@ KEY = {
 }
 MODSYM = {'LG': '⌘', 'RG': '⌘', 'LC': '⌃', 'RC': '⌃',
           'LA': '⌥', 'RA': '⌥', 'LS': '⇧', 'RS': '⇧'}
-LAYER_SHORT = {0: 'Base', 1: 'Win', 2: 'Media', 3: 'Adj', 4: 'Mix', 5: 'Num',
-               6: 'Num2', 7: 'Sym', 8: 'AdjMac'}
+# layer index -> display-name, filled from the keymap in extract_layers()
+# so the names shown here always match what ZMK Studio shows
+LAYER_SHORT = {}
 MACRO_EXPLAIN = {
     '&zmae': 'Types "ä"; hold Shift while tapping for "Ä". Sends macOS '
              'Option+"u" diaeresis dead-key (at the Colemak position for "u", '
@@ -137,10 +138,12 @@ def extract_layers(text):
     km = text[text.index('keymap {'):]
     layers = re.findall(
         r'(\w+_layer)\s*\{(.*?)\n        \};', km, re.S)
-    out = []
-    for name, body in layers:
+    for i, (name, body) in enumerate(layers):
         dm = re.search(r'display-name = "([^"]+)"', body)
-        display = dm.group(1) if dm else name
+        LAYER_SHORT[i] = dm.group(1) if dm else name
+    out = []
+    for i, (name, body) in enumerate(layers):
+        display = LAYER_SHORT[i]
         bm = re.search(r'bindings\s*=\s*<(.*?)>;', body, re.S)
         toks = re.findall(r'&\S+(?: [A-Za-z0-9_().+-]+){0,3}?(?=\s+&|\s*$)', bm.group(1))
         sm = re.search(r'sensor-bindings = <(.*?)>;', body)

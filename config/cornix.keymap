@@ -308,7 +308,7 @@
         // process_record_user() if available.
 
         default_layer {
-            display-name = "Base";
+            display-name = "Win";
 
             bindings = <
 &gresc     &kp Q         &kp W         &kp E          &kp R                &kp T          &kp Y      &kp U          &kp I          &kp O         &kp SQT               &kp BSPC
@@ -320,7 +320,7 @@
         };
 
         win_layer {
-            display-name = "Windows";
+            display-name = "Mac";
 
             bindings = <
 &trans     &trans        &trans    &trans        &trans           &trans        &trans  &trans  &trans        &trans         &trans         &trans
@@ -354,7 +354,7 @@
         };
 
         mix_layer {
-            display-name = "Mix";
+            display-name = "Umlaut";
 
             bindings = <
 &trans  &trans  &kp LG(RBKT)  &kp LG(LBKT)  &kp C_VOL_UP  &kp LC(LG(Q))  &trans  &trans  &zmue   &trans  &trans  &trans
@@ -405,7 +405,7 @@
             // of Adjust whenever win_layer (macOS mode) is also active.
             // Only overrides Home/End; everything else is &trans and falls
             // through to Adjust.
-            display-name = "AdjMac";
+            display-name = "Adjust Mac";
 
             bindings = <
 &trans  &trans  &trans  &trans  &trans  &trans  &trans        &trans  &trans  &trans  &trans  &trans

@@ -56,9 +56,9 @@ umlaut section below before assuming a position/mirroring bug.)
 
 ## OS-mode convention: Base = Windows, `win_layer` = macOS
 
-`default_layer` (index 0, display-name "Base") assumes Windows. `win_layer`
-(index 1, display-name "Windows" — a historical name inherited from before
-this convention existed; don't take the ZMK layer name at face value) is
+`default_layer` (index 0, display-name "Win") assumes Windows. `win_layer`
+(index 1, display-name "Mac" — the *node* name `win_layer` is a historical
+leftover from before this convention existed; don't take it at face value) is
 what you toggle to when working on a Mac, via `&tog 1` (bottom-right extra
 key on Base) / `&tog 0` (same slot on `win_layer`, to go back). GUI/Alt/Ctrl
 order on the thumb row is swapped between the two to match each OS's
@@ -95,15 +95,15 @@ listed in its `if-layers` (see the layer-index table below for what's free).
 
 | # | ZMK node | Display name | Reached from | Notes |
 |---|---|---|---|---|
-| 0 | `default_layer` | Base | (default) | Windows-mode |
-| 1 | `win_layer` | Windows | `&tog 1` (Base), `&tog 0` back | macOS-mode, despite the name |
+| 0 | `default_layer` | Win | (default) | Windows-mode |
+| 1 | `win_layer` | Mac | `&tog 1` (Base), `&tog 0` back | macOS-mode, despite the node name |
 | 2 | `media_layer` | Media | `&mo 2` (Base thumb) | |
 | 3 | `adjust_layer` | Adjust | `&lt 3 BSPC` (Base & win_layer thumb) | BT select, clipboard, nav, caps word, bootloader |
-| 4 | `mix_layer` | Mix | `&lt 4 LS(N6)` (win_layer thumb only) | Mac-only; umlaut macros live here |
+| 4 | `mix_layer` | Umlaut | `&lt 4 LS(N6)` (win_layer thumb only) | Mac-only; umlaut macros live here |
 | 5 | `num_layer` | Num | `&lt 5 LSHFT` (Base thumb) | |
 | 6 | `num2_layer` | Num2 | **unreachable** — only `&tog 6` exists, which lives *on* this layer | dead weight carried over from the Vial port; free to repurpose if you need another layer index |
 | 7 | `sym_layer` | Sym | `&lt 7 DELETE` (Base thumb) | |
-| 8 | `mac_adjust_layer` | AdjMac | automatic, via `conditional_layers` (`if-layers = <1 3>`) | see above; never target this directly with `&mo`/`&tog`/`&lt` |
+| 8 | `mac_adjust_layer` | Adjust Mac | automatic, via `conditional_layers` (`if-layers = <1 3>`) | see above; never target this directly with `&mo`/`&tog`/`&lt` |
 
 ## Combos
 
@@ -225,7 +225,11 @@ explanation). It's generated fresh from `config/cornix.keymap` and
 fills in [`../scripts/keymap-viz-template.html`](../scripts/keymap-viz-template.html))
 — no Docker/Nix/network needed, just `python3`. Re-run it after editing
 the keymap; the output file itself is gitignored (regenerate, don't
-commit it).
+commit it). Layer names (tabs, `▽…` layer-tap labels, combo layer lists)
+are read from each layer's `display-name`, the same names ZMK Studio
+shows — rename a layer there only, no script change needed. (A rename
+done *inside* ZMK Studio is stored on the keyboard only and never reaches
+the repo or the visualization.)
 
 The same page is published on GitHub Pages at
 <https://dok529.github.io/zmk-keyboard-cornix/keymap/>:
