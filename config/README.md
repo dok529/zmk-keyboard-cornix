@@ -67,9 +67,9 @@ physical modifier layout convention.
 Most other layers (Media, Adjust, Num, Sym, ...) are shared and reached
 identically regardless of which OS-mode layer is active — they don't
 inherently "know" which OS you're in. `mix_layer` is the one exception:
-it's reached *only* from `win_layer` (`&lt 4 LS(N6)`, not reachable from
+it's reached *only* from `win_layer` (`&lt 5 LS(N6)`, not reachable from
 Base at all) and is already Mac-flavored throughout (Cmd-based shortcuts,
-the umlaut macros).
+the umlaut macros). `game_layer` is Mac-only too, see below.
 
 ### Layer-specific OS overrides: `conditional_layers`
 
@@ -82,11 +82,12 @@ additive, never a replacement, and higher-index layers win ties — see
 Give layer N `&trans` everywhere except the positions that actually need to
 differ; those fall through to the shared layer underneath.
 
-`mac_adjust_layer` (index 8) is the working example: `if-layers = <1 3>`
+`mac_adjust_layer` (index 8) is the working example: `if-layers = <1 4>`
 (win_layer + Adjust) `then-layer = <8>` overrides Adjust's Home/End with
 `LG(LEFT)`/`LG(RIGHT)` (raw Home/End scroll the macOS viewport instead of
 moving the cursor — Cmd+Left/Right is the macOS-idiomatic equivalent, and
-this keymap already uses it elsewhere) and is `&trans` everywhere else. Use
+this keymap already uses it elsewhere), adds the Mac-only `&tog 2` (Game
+layer) on position 5 (Colemak G), and is `&trans` everywhere else. Use
 the same pattern for any future "this key needs to differ when we're in
 Mac-mode" request. A `then-layer` index must be higher than every index
 listed in its `if-layers` (see the layer-index table below for what's free).
@@ -97,13 +98,34 @@ listed in its `if-layers` (see the layer-index table below for what's free).
 |---|---|---|---|---|
 | 0 | `default_layer` | Win | (default) | Windows-mode |
 | 1 | `win_layer` | Mac | `&tog 1` (Base), `&tog 0` back | macOS-mode, despite the node name |
-| 2 | `media_layer` | Media | `&mo 2` (Base thumb) | |
-| 3 | `adjust_layer` | Adjust | `&lt 3 BSPC` (Base & win_layer thumb) | BT select, clipboard, nav, caps word, bootloader |
-| 4 | `mix_layer` | Umlaut | `&lt 4 LS(N6)` (win_layer thumb only) | Mac-only; umlaut macros live here |
-| 5 | `num_layer` | Num | `&lt 5 LSHFT` (Base thumb) | |
-| 6 | `num2_layer` | Num2 | **unreachable** — only `&tog 6` exists, which lives *on* this layer | dead weight carried over from the Vial port; free to repurpose if you need another layer index |
+| 2 | `game_layer` | Game | `&tog 2` on `mac_adjust_layer` (Adjust + Colemak G, Mac mode only), same combo to leave | see "Game layer" below |
+| 3 | `media_layer` | Media | `&mo 3` (Base thumb) | |
+| 4 | `adjust_layer` | Adjust | `&lt 4 BSPC` (Base & win_layer thumb) | BT select, clipboard, nav, caps word, bootloader |
+| 5 | `mix_layer` | Umlaut | `&lt 5 LS(N6)` (win_layer thumb only) | Mac-only; umlaut macros live here |
+| 6 | `num_layer` | Num | `&lt 6 LSHFT` (Base thumb), `&tog 6` (on Num itself) to lock | |
 | 7 | `sym_layer` | Sym | `&lt 7 DELETE` (Base thumb) | |
-| 8 | `mac_adjust_layer` | Adjust Mac | automatic, via `conditional_layers` (`if-layers = <1 3>`) | see above; never target this directly with `&mo`/`&tog`/`&lt` |
+| 8 | `mac_adjust_layer` | Adjust Mac | automatic, via `conditional_layers` (`if-layers = <1 4>`) | see above; never target this directly with `&mo`/`&tog`/`&lt` |
+
+Layer order matters: a higher index overrides a lower one wherever it isn't
+`&trans`. Media/Adjust/Umlaut/Num (now 3–6) used to be 2–5; the old
+`num2_layer` (unused Vial leftover at index 6) was replaced by `game_layer`
+and moved to index 2 on 2026-10-17, so **every `&mo`/`&lt`/`&tog`/
+`if-layers` number from 2 to 5 was raised by one** — keep that in mind
+when reading older commits.
+
+### Game layer
+
+`game_layer` (index 2) is a macOS gaming mode on top of `win_layer`: the
+eight home-row keys are plain `&kp` (no home-row mods), position 41 is a
+plain `LSHFT` (instead of the Umlaut layer-tap), 42 a plain `SPACE`
+(instead of the `thumb_shift` hold-tap, which would only emit Space on
+release), 23 is `ENTER`, everything else `&trans` (so 43 keeps Tab /
+hold-Cmd). It deliberately sits *directly above* `win_layer` and below all
+momentary layers: at a higher index its plain home-row keys would mask
+Num's 4/5/6 and Adjust's arrows while those layers are held. Combos are
+inactive while it's on (ZMK only fires a combo when the *highest* active
+layer is in its `layers` list), which also keeps W+F/P+G from misfiring
+during WASD-style play — hence the explicit Enter key.
 
 ## Combos
 
@@ -262,8 +284,6 @@ docs. Two build paths exist:
 
 ## Known gaps / TODOs
 
-- `num2_layer` (index 6) is unreachable — either wire it up or repurpose the
-  index.
 - `USER00`/`USER01`/`USER02`/`USER05`/`USER06` → BT_SEL mapping is an
   unverified guess (see above).
 - Mic-mute on macOS (distinct from system mute, which is unaffected): macOS

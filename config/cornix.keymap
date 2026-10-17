@@ -254,7 +254,7 @@
     conditional_layers {
         compatible = "zmk,conditional-layers";
 
-        // Adjust (layer 3) is reached identically from Base (Windows) and
+        // Adjust (layer 4) is reached identically from Base (Windows) and
         // win_layer (macOS mode), so it can't know which OS it's for. When
         // win_layer + Adjust are both active, additionally activate
         // mac_adjust_layer on top: it overrides only Home/End with the
@@ -262,7 +262,7 @@
         // macOS instead of moving the cursor) and is &trans everywhere else,
         // falling through to Adjust's shared bindings.
         mac_adjust {
-            if-layers = <1 3>;
+            if-layers = <1 4>;
             then-layer = <8>;
         };
     };
@@ -314,7 +314,7 @@
 &gresc     &kp Q         &kp W         &kp E          &kp R                &kp T          &kp Y      &kp U          &kp I          &kp O         &kp SQT               &kp BSPC
 &kp TAB    &hm_l LALT A  &hm_l LGUI S  &hm_l LCTRL D  &hm_shift_l LSHFT F  &kp G          &kp H      &hm_shift_r RSHFT J  &hm_r RCTRL K  &hm_r RALT L  &hm_r LGUI SEMI       &none
 &kp LSHFT  &kp Z         &kp X         &kp C          &kp V                &kp B  &zm4    &tog 1     &kp N      &kp M          &kp COMMA      &kp DOT       &kp FSLH              &kp BSLH
-&kp LCTRL  &kp LGUI      &kp LALT      &mo 2          &thumb_shift LSHFT SPACE  &hm LCTRL TAB  &lt 5 LSHFT  &lt 3 BSPC  &lt 7 DELETE  &kp HOME      &kp LG(U)             &kp END
+&kp LCTRL  &kp LGUI      &kp LALT      &mo 3          &thumb_shift LSHFT SPACE  &hm LCTRL TAB  &lt 6 LSHFT  &lt 4 BSPC  &lt 7 DELETE  &kp HOME      &kp LG(U)             &kp END
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp RIGHT LEFT>;
         };
@@ -326,7 +326,26 @@
 &trans     &trans        &trans    &trans        &trans           &trans        &trans  &trans  &trans        &trans         &trans         &trans
 &trans     &hm_l LGUI A  &hm_l LALT S  &trans    &trans           &trans        &trans  &trans  &trans        &trans         &trans         &trans
 &trans     &trans        &trans    &trans        &trans           &trans  &kp LG(LS(M))  &tog 0  &trans        &trans         &trans        &trans  &trans  &trans
-&kp LGUI   &kp LALT      &kp LCTRL &lt 4 LS(N6)  &thumb_shift LSHFT SPACE  &hm LGUI TAB  &trans  &trans  &trans        &kp LG(LEFT)  &kp LC(LG(Q))  &kp LG(RIGHT)
+&kp LGUI   &kp LALT      &kp LCTRL &lt 5 LS(N6)  &thumb_shift LSHFT SPACE  &hm LGUI TAB  &trans  &trans  &trans        &kp LG(LEFT)  &kp LC(LG(Q))  &kp LG(RIGHT)
+            >;
+        };
+
+        game_layer {
+            // macOS-only gaming mode, toggled with Adjust + Colemak G (see
+            // mac_adjust_layer). Sits directly above win_layer so every layer
+            // reached by holding a thumb key (Media/Adjust/Umlaut/Num/Sym)
+            // still overrides it. Home row without home-row mods, plain
+            // Shift/Space on the thumbs (hold-taps there delay a tap until
+            // release -- e.g. jump only on Space release), Enter on the outer
+            // home-row key since the Enter combos are inactive here (combos
+            // only fire when the *highest* active layer is in their list).
+            display-name = "Game";
+
+            bindings = <
+&trans     &trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans     &trans
+&trans     &kp A   &kp S   &kp D   &kp F   &trans          &trans  &kp J   &kp K   &kp L   &kp SEMI   &kp ENTER
+&trans     &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans     &trans  &trans
+&trans     &trans  &trans  &kp LSHFT  &kp SPACE  &trans    &trans  &trans  &trans  &trans  &trans     &trans
             >;
         };
 
@@ -370,23 +389,12 @@
             bindings = <
 &trans  &kp LBKT   &kp N7  &kp N8  &kp N9  &kp RBKT   &trans  &trans     &trans     &trans     &trans    &trans
 &trans  &kp P      &kp N4  &kp N5  &kp N6  &kp EQUAL  &trans  &kp RSHFT  &kp RCTRL  &kp RALT   &kp RGUI  &trans
-&trans  &kp GRAVE  &kp N1  &kp N2  &kp N3  &kp BSLH  &kp C_MUTE  &mkp MB3  &tog 5  &trans  &trans  &trans  &trans  &trans
+&trans  &kp GRAVE  &kp N1  &kp N2  &kp N3  &kp BSLH  &kp C_MUTE  &mkp MB3  &tog 6  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &kp DOT  &kp N0  &kp MINUS        &trans  &trans  &trans  &trans  &trans  &trans
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_DN PG_UP>;
         };
 
-        num2_layer {
-            display-name = "Num2";
-
-            bindings = <
-&trans  &trans    &trans    &trans     &trans     &trans   &kp LBKT  &kp N7  &kp N8  &kp N9  &kp RBKT   &trans
-&trans  &kp LGUI  &kp LALT  &kp LCTRL  &kp LSHFT  &trans   &kp EQUAL &kp N4  &kp N5  &kp N6  &kp N0     &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &kp C_MUTE  &mkp MB3  &kp P  &kp N1  &kp N2  &kp N3  &kp MINUS  &trans
-&trans  &trans  &trans  &trans  &tog 6  &trans        &kp COMMA  &kp DOT  &trans  &trans  &trans  &trans
-            >;
-            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_DN PG_UP>;
-        };
 
         sym_layer {
             display-name = "Sym";
@@ -403,12 +411,13 @@
         mac_adjust_layer {
             // Activated automatically (see conditional_layers above) on top
             // of Adjust whenever win_layer (macOS mode) is also active.
-            // Only overrides Home/End; everything else is &trans and falls
-            // through to Adjust.
+            // Overrides Home/End with Cmd+Left/Right and adds the Game-layer
+            // toggle on Colemak G (position 5); everything else is &trans
+            // and falls through to Adjust.
             display-name = "Adjust Mac";
 
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans  &trans        &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &tog 2  &trans        &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans  &kp LG(LEFT)  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp LG(LEFT)  &trans  &trans  &kp LG(RIGHT)  &trans
 &trans  &trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans
