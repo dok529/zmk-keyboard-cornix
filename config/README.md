@@ -185,7 +185,22 @@ by **this repo as a Zephyr module**:
 - `src/behaviors/behavior_caps_word_ext.c` — the behavior; compatible
   `zmk,behavior-caps-word-ext`, adds `shift-list` (keys outside A–Z that are
   shifted and keep caps word on: `SEMI`) and `break-list` (keys inside A–Z
-  that are not shifted and end it: `P`). Otherwise identical to upstream.
+  that are not shifted and end it: `P` — matched only with exactly the
+  entry's implicit mods, so a plain P breaks but `RA(P)` doesn't) and
+  `no-shift-mods` (while Ctrl/LAlt/Gui are held or implicit on the key,
+  letters are not shifted — keeps Ctrl+C a plain Ctrl+C). Otherwise
+  identical to upstream.
+
+Umlauts inside caps word, both OS modes:
+
+- **Mac** (Umlaut layer, `zmuml` macros): the Option+I dead key carries
+  LALT → not shifted; the vowel tapped after it is → Ä/Ö/Ü.
+- **Windows** (Media layer, `RA(Q)`/`RA(P)`/`RA(O)`/`RA(D)` = Colemak AltGr
+  ä/ö/ü/ß): **RALT is deliberately not in `no-shift-mods`**, so these get
+  AltGr+Shift → Ä/Ö/Ü. Adding RALT there, or matching `break-list` without
+  modifiers, would bring back lowercase umlauts (and for `RA(P)` end caps
+  word). `RA(D)` (ß) gets AltGr+Shift too, whatever the Windows layout puts
+  there.
 - `dts/bindings/behaviors/zmk,behavior-caps-word-ext.yaml` — DT binding.
 - `CMakeLists.txt`, `Kconfig`, `zephyr/module.yml` (`cmake`, `kconfig`,
   `dts_root`) at the repo root wire it in; the build picks the module up via

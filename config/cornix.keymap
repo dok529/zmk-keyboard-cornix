@@ -190,6 +190,13 @@
             continue-list = <UNDERSCORE BACKSPACE DELETE>;
             shift-list = <SEMI>;
             break-list = <P>;
+            // no Shift added while Ctrl/Alt/Gui are active: shortcuts stay
+            // unshifted, and the Mac umlaut macros' Option+I dead key isn't
+            // turned into Option+Shift+I (the vowel after it still is).
+            // RALT deliberately left out: on Windows it's AltGr, and the
+            // Media-layer umlauts RA(Q)/RA(P)/RA(O) need AltGr+Shift for
+            // Ä/Ö/Ü. (break-list P only matches a plain P, not RA(P).)
+            no-shift-mods = <(MOD_LCTL|MOD_RCTL|MOD_LALT|MOD_LGUI|MOD_RGUI)>;
             display-name = "Caps Word";
         };
 

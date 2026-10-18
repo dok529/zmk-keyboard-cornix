@@ -20,5 +20,10 @@ properties:
   break-list:
     type: array
     description: Keys within A-Z that are NOT shifted and deactivate caps word.
+  no-shift-mods:
+    type: int
+    description: |
+      Modifier mask; while any of these is active (held or implicit on the
+      key), letters are not shifted. Caps word stays active.
   mods:
     type: int

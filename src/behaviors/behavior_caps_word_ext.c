@@ -8,7 +8,15 @@
  * A-Z keycodes (Colemak: "o" is on SEMI, ";" is on P):
  *
  *   shift-list: keys outside A-Z that are shifted and keep caps word on
- *   break-list: keys inside A-Z that are NOT shifted and end caps word
+ *   break-list: keys inside A-Z that are NOT shifted and end caps word.
+ *               An entry only matches the key with exactly the entry's
+ *               implicit modifiers: P matches a plain P, not RA(P) (the
+ *               Windows AltGr umlaut on that key, which must be shifted).
+ *
+ * plus no-shift-mods: while any of these modifiers is active (held, or
+ * implicit on the key itself) letters are not shifted. Keeps shortcuts like
+ * Ctrl+C from becoming Ctrl+Shift+C, and the macOS umlaut dead key
+ * (Option+I inside the zmuml macro) from turning into Option+Shift+I.
  *
  * Everything else behaves exactly like upstream caps word. If upstream
  * changes behavior_caps_word.c, compare and carry the changes over here.
@@ -42,6 +50,7 @@ struct caps_word_item {
 
 struct behavior_caps_word_ext_config {
     zmk_mod_flags_t mods;
+    zmk_mod_flags_t no_shift_mods;
     const struct caps_word_item *continuations;
     uint8_t continuations_count;
     const struct caps_word_item *shifts;
@@ -122,11 +131,25 @@ static bool caps_word_is_caps_includelist(const struct behavior_caps_word_ext_co
     return false;
 }
 
-// shift-list / break-list match on the key alone, ignoring modifiers.
+// shift-list matches on the key alone, ignoring modifiers.
 static bool caps_word_in_list(const struct caps_word_item *items, uint8_t count,
                               uint16_t usage_page, uint8_t usage_id) {
     for (int i = 0; i < count; i++) {
         if (items[i].page == usage_page && items[i].id == usage_id) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// break-list matches the key only with exactly the entry's implicit mods.
+static bool caps_word_in_list_exact(const struct caps_word_item *items, uint8_t count,
+                                    uint16_t usage_page, uint8_t usage_id,
+                                    uint8_t implicit_modifiers) {
+    for (int i = 0; i < count; i++) {
+        if (items[i].page == usage_page && items[i].id == usage_id &&
+            items[i].implicit_modifiers == implicit_modifiers) {
             return true;
         }
     }
@@ -145,18 +168,22 @@ static bool caps_word_is_numeric(uint8_t usage_id) {
 
 // A "letter" of the OS layout: A-Z minus break-list, plus shift-list.
 static bool caps_word_is_letter(const struct behavior_caps_word_ext_config *config,
-                                uint16_t usage_page, uint8_t usage_id) {
+                                uint16_t usage_page, uint8_t usage_id,
+                                uint8_t implicit_modifiers) {
     if (caps_word_in_list(config->shifts, config->shifts_count, usage_page, usage_id)) {
         return true;
     }
 
     return usage_page == HID_USAGE_KEY && caps_word_is_alpha(usage_id) &&
-           !caps_word_in_list(config->breaks, config->breaks_count, usage_page, usage_id);
+           !caps_word_in_list_exact(config->breaks, config->breaks_count, usage_page, usage_id,
+                                    implicit_modifiers);
 }
 
+// only called for letters (caps_word_is_letter)
 static void caps_word_enhance_usage(const struct behavior_caps_word_ext_config *config,
                                     struct zmk_keycode_state_changed *ev) {
-    if (!caps_word_is_letter(config, ev->usage_page, ev->keycode)) {
+    if ((ev->implicit_modifiers | zmk_hid_get_explicit_mods()) & config->no_shift_mods) {
+        LOG_DBG("Not enhancing usage 0x%02X, no-shift modifier active", ev->keycode);
         return;
     }
 
@@ -180,10 +207,15 @@ static int caps_word_keycode_state_changed_listener(const zmk_event_t *eh) {
 
         const struct behavior_caps_word_ext_config *config = dev->config;
 
-        caps_word_enhance_usage(config, ev);
+        // decided before enhancing, which adds Shift to implicit_modifiers
+        bool letter =
+            caps_word_is_letter(config, ev->usage_page, ev->keycode, ev->implicit_modifiers);
 
-        if (!caps_word_is_letter(config, ev->usage_page, ev->keycode) &&
-            !caps_word_is_numeric(ev->keycode) && !is_mod(ev->usage_page, ev->keycode) &&
+        if (letter) {
+            caps_word_enhance_usage(config, ev);
+        }
+
+        if (!letter && !caps_word_is_numeric(ev->keycode) && !is_mod(ev->usage_page, ev->keycode) &&
             !caps_word_is_caps_includelist(config, ev->usage_page, ev->keycode,
                                            ev->implicit_modifiers)) {
             LOG_DBG("Deactivating caps_word for 0x%02X - 0x%02X", ev->usage_page, ev->keycode);
@@ -213,6 +245,7 @@ static int caps_word_keycode_state_changed_listener(const zmk_event_t *eh) {
     static struct behavior_caps_word_ext_data behavior_caps_word_ext_data_##n = {.active = false}; \
     static const struct behavior_caps_word_ext_config behavior_caps_word_ext_config_##n = {        \
         .mods = DT_INST_PROP_OR(n, mods, MOD_LSFT),                                                \
+        .no_shift_mods = DT_INST_PROP_OR(n, no_shift_mods, 0),                                     \
         .continuations = caps_word_ext_continue_list_##n,                                          \
         .continuations_count = LIST_LEN(n, continue_list),                                         \
         .shifts = caps_word_ext_shift_list_##n,                                                    \
