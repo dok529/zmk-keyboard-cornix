@@ -118,7 +118,7 @@ def label_for(token):
         return dict(main='BT', sub='clear', full=t, kind='bt')
     if t == '&bootloader':
         return dict(main='Boot', sub='loader', full=t, kind='sys')
-    if t == '&caps_word':
+    if t in ('&caps_word', '&caps_word_colemak'):
         return dict(main='Caps', sub='word', full=t, kind='sys')
     if t == '&gresc':
         return dict(main='Esc', sub='` ~', full=t, kind='morph')

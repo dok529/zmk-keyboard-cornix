@@ -1,0 +1,24 @@
+# Copyright (c) 2021 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+description: |
+  Caps word with configurable capitalization, for OS layouts where letters
+  don't sit on the HID A-Z keycodes (e.g. Colemak's "o" on SEMI).
+
+compatible: "zmk,behavior-caps-word-ext"
+
+include: zero_param.yaml
+
+properties:
+  continue-list:
+    type: array
+    required: true
+    description: Keys that keep caps word active without being shifted.
+  shift-list:
+    type: array
+    description: Additional keys (outside A-Z) that are shifted and keep caps word active.
+  break-list:
+    type: array
+    description: Keys within A-Z that are NOT shifted and deactivate caps word.
+  mods:
+    type: int

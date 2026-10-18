@@ -173,6 +173,31 @@ position-ordering rules above, or cross-reference
   only increases false-hold misfires — don't reach for that lever.
 - `gresc` — mod-morph: tap for Escape, tap-while-Shift/Gui-held for `` ` ``/`~`.
 
+## Caps word for Colemak (`caps_word_colemak`, custom C behavior)
+
+The OS layout is Colemak on both Mac and Windows, but ZMK's stock
+`&caps_word` only knows the HID A–Z keycodes as letters: Colemak "o" is HID
+`SEMI` (so caps word ended on it) and Colemak ";" is HID `P` (so it got
+shifted to ":"). `&caps_word_colemak` (Adjust layer, position 32) replaces
+it. It is a copy of ZMK's `app/src/behaviors/behavior_caps_word.c` shipped
+by **this repo as a Zephyr module**:
+
+- `src/behaviors/behavior_caps_word_ext.c` — the behavior; compatible
+  `zmk,behavior-caps-word-ext`, adds `shift-list` (keys outside A–Z that are
+  shifted and keep caps word on: `SEMI`) and `break-list` (keys inside A–Z
+  that are not shifted and end it: `P`). Otherwise identical to upstream.
+- `dts/bindings/behaviors/zmk,behavior-caps-word-ext.yaml` — DT binding.
+- `CMakeLists.txt`, `Kconfig`, `zephyr/module.yml` (`cmake`, `kconfig`,
+  `dts_root`) at the repo root wire it in; the build picks the module up via
+  `-DZMK_EXTRA_MODULES=/repo` (local Docker build) or automatically (GitHub
+  `build-user-config` workflow, which adds the repo root as a module when it
+  has `zephyr/module.yml`).
+
+If a ZMK update changes the upstream caps word file (or its internal APIs
+and the build breaks), diff it against `behavior_caps_word_ext.c` and carry
+the changes over. If another Colemak key ever misbehaves under caps word,
+adjust `shift-list`/`break-list` in the keymap, not the C code.
+
 ## Macros (`macros { }`) and the umlaut mechanism
 
 `zm4` is a plain macro (Cmd+Option+N). `zmuml` is a **parameterized** macro
