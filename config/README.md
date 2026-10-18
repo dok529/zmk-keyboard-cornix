@@ -248,6 +248,17 @@ green flash means "battery high" — both are routine, not errors; only a
 yellow (advertising) or red (disconnected) flash indicates an actual BLE
 reconnect event worth investigating.
 
+## Split link / right-half lag
+
+The right half occasionally lagged badly on the Mac. Two causes found so
+far: (1) a stale right-half firmware (always flash **both** halves after
+config changes), (2) the right half transmitting at the 0 dBm default while
+only the left board defconfig set +8 dBm. `config/cornix.conf` now sets
+`CONFIG_BT_CTLR_TX_PWR_PLUS_8=y` for every half (verify with
+`CONFIG_BT_CTLR_TX_PWR_DBM=8` in both build `.config`s). If lag persists,
+look for 2.4 GHz interference near the left (central) half: USB 3 hubs,
+docks, SSDs, other Bluetooth devices.
+
 ## ZMK Studio
 
 `config/cornix.conf` sets `CONFIG_ZMK_STUDIO=y` (+ locking disabled, to
